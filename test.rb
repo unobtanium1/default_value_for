@@ -434,6 +434,15 @@ class DefaultValuePluginTest < TestCaseClass
       user = User.create!(ActionController::Parameters.new(:bio => 'This is a bio').permit!)
       assert_equal 'This is a bio', user.bio
     end
+
+    def test_works_with_empty_active_record_relation
+      book = Book.create!
+      User.default_value_for :books do
+        [book]
+      end
+      user = User.create
+      assert_equal user.books, [book]
+    end
   end
 
   if ActiveRecord::VERSION::MAJOR == 3
